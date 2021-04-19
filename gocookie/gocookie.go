@@ -15,7 +15,7 @@ import (
 
 // interface cookier
 type cookier interface {
-	GetCookies(hostName string) (map[string]interface{}, error)
+	GetCookies(hostName string) (map[string][]byte, error)
 }
 
 // Chrome cookie
@@ -27,7 +27,7 @@ func NewChromeCookie() cookier {
 	return chromeCookie{}
 }
 
-func (c chromeCookie) GetCookies(hostName string) (map[string]interface{}, error) {
+func (c chromeCookie) GetCookies(hostName string) (map[string][]byte, error) {
 	curUser, err := user.Current()
 	if err != nil {
 		return nil, fmt.Errorf("cannot confirmed current user, error: %v", err)
@@ -54,7 +54,7 @@ func (c chromeCookie) GetCookies(hostName string) (map[string]interface{}, error
 	}
 	defer rows.Close()
 	// get cookie value
-	cookies := make(map[string]interface{})
+	cookies := make(map[string][]byte)
 	for rows.Next() {
 		var name string
 		var encryptedValue []byte
@@ -72,7 +72,7 @@ func (c chromeCookie) GetCookies(hostName string) (map[string]interface{}, error
 		if err != nil {
 			return nil, err
 		}
-		cookies[name] = string(decryptedValue)
+		cookies[name] = decryptedValue
 	}
 	return cookies, nil
 }
