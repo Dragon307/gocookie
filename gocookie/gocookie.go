@@ -8,6 +8,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os/user"
+
+	// sqlite3 driver
+	_ "github.com/mattn/go-sqlite3"
 )
 
 // interface cookier
